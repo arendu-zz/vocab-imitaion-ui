@@ -1,0 +1,33 @@
+{
+    "name": "vocab-trainer-ui",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "underscore": "*",
+        "body-parser": "*",
+        "request-promise": "*",
+        "socket.io": "*",
+        "express": "4.x",
+        "body-parser": "*",
+        "cookie-parser": "*",
+        "express-session": "*",
+        "pug": "*",
+        "bcrypt-nodejs": "*",
+        "passport": "*",
+        "passport-local": "*",
+        "mysql": "*",
+        "bookshelf": "0.5",
+        "bouncy": "*",
+        "uuid": "*",
+        "http-proxy": "*",
+        "walk": "*",
+        "node-http-proxy": "*",
+        "fast-levenshtein": "*"
+    }
+}
