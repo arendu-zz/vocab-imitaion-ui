@@ -7,7 +7,8 @@ var _ = require('underscore');
 var IP = process.argv.slice(2)[0];
 if (!IP) {
   console.log("no IP arg");
-  process.exit(1);
+  //process.exit(1);
+  IP='http://localhost:8001';
 
 }
 console.log("IP is", IP);
@@ -15,20 +16,18 @@ var global_data = JSON.parse(fs.readFileSync('./data/es-en-medium.vocab.question
 var global_col_headers = _.map(global_data["0"], function(row) {
   return row.cats.join(', ').replace('Simple-', '');
 });
-var global_cat_grid = {};
 var global_lemcat2pair = {};
 var global_pair2questions = {};
+var global_quizpairs = [];
 
 for (var row_key in global_data) {
-  global_cat_grid[row_key] = {};
   for (var col_key in global_data[row_key]) {
     pair_obj = global_data[row_key][col_key];
-    global_cat_grid[row_key][col_key] = {
-      lemcat: row_key + ', ' + pair_obj.cats.join(', '),
-      'isTest': pair_obj.isTest
-    };
-    global_lemcat2pair[global_cat_grid[row_key][col_key].lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
+    global_lemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
     global_pair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
+    if (pair_obj.isTest){
+      global_quizpairs.push(pair_obj);
+    }
   }
 }
 
@@ -37,6 +36,27 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public/'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
+
+app.get('/quiz', function(req, res) {
+  var sampled_pairs = _.sample(global_quizpairs, 10);
+  var quiz_questions = [];
+  for (var sp in sampled_pairs) {
+    var quiz_question = {};
+    var direction = _.sample(['e2f', 'f2e']);
+    if (direction == 'f2e') {
+      quiz_question.prompt_str = sp.l2_str;
+      quiz_question.direction = direction;
+    }else{
+      quiz_question.prompt_str = sp.l1_str;
+      quiz_question.direction = direction;
+    }
+    quiz_questions.push(quiz_question);
+  }
+  res.render('quiz',{
+      title: 'Quiz',
+      quiz_questions: quiz_questions
+  });
+});
 
 app.get('/practice_selection', function(req, res) {
   var lemcat = req.query.lemcat;
@@ -52,6 +72,8 @@ app.get('/practice_selection', function(req, res) {
 });
 
 app.get('/reveal', function(req, res) {
+  console.log(req.query.lemcat, 'here');
+  console.log(global_lemcat2pair);
   var pair = global_lemcat2pair[req.query.lemcat];
   var q = global_pair2questions[pair][0];
   var phrase_pair = {
@@ -97,14 +119,25 @@ app.get('/practice', function(req, res) {
   });
 });
 
+/*app.get('/', function(req, res) {
+  var col_headers = _.map(global_data["0"], function(row) {
+    return row.cats.join(', ').replace('Simple-', '');
+  });
+  res.render('group_selection', {
+    title: 'Select Training Pair',
+    headers: global_col_headers,
+    message: global_data
+  });
+});
+*/
 app.get('/', function(req, res) {
   var col_headers = _.map(global_data["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
-  res.render('pair_selection', {
+  res.render('card_selection', {
     title: 'Select Training Pair',
     headers: global_col_headers,
-    message: global_cat_grid
+    groups: global_data
   });
 });
 
@@ -112,10 +145,10 @@ app.get('/back', function(req, res) {
   var col_headers = _.map(global_data["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
-  res.render('pair_selection', {
+  res.render('group_selection', {
     title: 'Select Training Pair',
     headers: global_col_headers,
-    message: global_cat_grid
+    message: global_data 
   });
 });
 

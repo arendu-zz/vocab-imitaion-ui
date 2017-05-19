@@ -35,8 +35,8 @@ if __name__ == '__main__':
     pairs = []
     es2en = {}
     en2es = {}
-
     prev_test_line = -1
+
     for line_idx, line in enumerate(data[1:]):
         for phrase_idx, phrase_pairs in enumerate(line):
             es_str, en_str = phrase_pairs.strip().split('/')
@@ -90,20 +90,26 @@ if __name__ == '__main__':
                 pq.append(q_lem)
         pair2questions[p] = pq
 
-    dump_obj = {}
-    for p in pairs:
-        o = {'cats': pair2cats[p],
-            'isTest': p in test_pairs,
-            'x': int(pair2cell[p][0]),
-            'y': int(pair2cell[p][1]),
-            'l1_str': p[1], 
-            'l2_str': p[0],
-            'questions': pair2questions[p]}
-        xo = dump_obj.get(o['x'], [])
-        xo.append(o)
-        dump_obj[o['x']] = xo
+    print cat2pairs.keys()
+    main_cats = ['Simple-Present', 'Simple-Past', 'Simple-Future']
+    full_group = {}
+    for mc_idx, mc in enumerate(main_cats):
+        dump_obj = {}
+        for p in cat2pairs[mc]:
+            o = {'cats': pair2cats[p],
+                'isTest': p in test_pairs,
+                'x': int(pair2cell[p][0]),
+                'y': int(pair2cell[p][1]),
+                'l1_str': p[1], 
+                'l2_str': p[0],
+                'lemcat': str(pair2lem[p]) + ', ' + ','.join(pair2cats[p]),
+                'questions': pair2questions[p]}
+            xo = dump_obj.get(o['x'], [])
+            xo.append(o)
+            dump_obj[o['x']] = xo
+        full_group[mc_idx + 1] = dump_obj
     dump_file = codecs.open(options.vocab_file + '.questions.js', 'w', 'utf8')
-    dump_str = json.dumps(dump_obj, indent=4, sort_keys=True)
+    dump_str = json.dumps(full_group, indent=4, sort_keys=True)
     dump_file.write(dump_str)
     dump_file.flush()
     dump_file.close()

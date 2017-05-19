@@ -37,6 +37,11 @@ html
                 td
                   form#selection_form
                     button.submitLink(formaction='/reveal', name='lemcat', value=col.lemcat, disabled=col.isTest)
-                      | Reveal 
+                      | Reveal #{col.l2_str}
                     button.submitLink(formaction='/practice_selection', name='lemcat', value=col.lemcat, disabled=col.isTest)
                       | Practice 
+      p
+        form
+          | Proceed to 
+          button.submitLink(formaction='/quiz')
+            | quiz

@@ -6,11 +6,31 @@ var updateTimerDisp = function(sec, lab, form, type) {
 };
 var updateEndTimerDisp = function(sec, lab) {
   end_tick_time_rem = end_tick_time_rem - 1;
-  lab.text("loading next card(" + end_tick_time_rem + ")" );
+  lab.text("loading next card(" + end_tick_time_rem + ")");
 };
 
 
 var onEndedTimer = function(lab) {
-    console.log("end timer");
-    get_feedback();
+  console.log("end timer");
+  get_feedback();
+};
+
+$.fn.filterData = function(key, value) {
+  return this.filter(function() {
+    return $(this).data(key) == value;
+  });
+};
+
+
+Array.prototype.shuffle = function() {
+  var i = this.length,
+    j, temp;
+  if (i === 0) return this;
+  while (--i) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = this[i];
+    this[i] = this[j];
+    this[j] = temp;
+  }
+  return this;
 };
