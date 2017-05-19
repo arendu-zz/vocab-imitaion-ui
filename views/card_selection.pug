@@ -121,17 +121,20 @@ html
                 each col in rows
                   td
                       div.miniCardLayout(id='card-' + col.lemcat + '-side=1', data-col=col,  data-side='1')
-                        //div.topBar
-                        label.foreign
-                          | #{col.l2_str}
+                        div.holder
+                          label.foreign
+                            | #{col.l2_str}
                         div.topBar
                           label.submitLink.info(onclick='flipme(this)', data-for='card-' + col.lemcat + '-side=1') flip
                           label.submitLink.info(onclick='practiceme(this)', data-for='card-' + col.lemcat + '-side=1') practice
 
                       div.miniCardLayout(id='card-' + col.lemcat + '-side=2', data-col=col,  data-side='2')
                         //div.topBar
-                        label.english
-                          | #{col.l1_str}
+                        div.holder
+                          label.foreign
+                            | #{col.l2_str}
+                          label.english
+                            | #{col.l1_str}
                         div.topBar
                           label.submitLink.info(onclick='flipme(this)', data-for='card-' + col.lemcat + '-side=2') flip
                           label.submitLink.info(onclick='practiceme(this)', data-for='card-' + col.lemcat + '-side=2') practice
