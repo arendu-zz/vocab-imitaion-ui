@@ -7,7 +7,6 @@ var _ = require('underscore');
 var IP = process.argv.slice(2)[0];
 if (!IP) {
   console.log("no IP arg");
-  //process.exit(1);
   IP='http://localhost:8001';
 
 }

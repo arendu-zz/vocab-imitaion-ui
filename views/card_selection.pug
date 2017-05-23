@@ -10,6 +10,7 @@ html
         script(src='/js/underscore-min.js', type='text/javascript')
         script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', type='text/javascript')
         script(type='text/javascript').
+          var show_obj = {'duration': 1000, 'easing': 'swing', 'done': function() {console.log('done');},  'start': function(){console.log('starting');}, 'complete': function(e){console.log('ending', e);}}
 
           Array.prototype.shuffle = function() {
             var i = this.length,
@@ -63,7 +64,8 @@ html
             new_e.hide();
             var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=3';
             var new_e = $(document.getElementById(new_id));
-            new_e.show();
+            var option_holder = $(document.getElementById('option_holder-' + col_obj.lemcat));
+            new_e.show(5, compose_question(option_holder, col_obj)) 
           }
 
           function cycleme(e) {
@@ -77,7 +79,7 @@ html
             }
             var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=' + new_side;
             var new_e = $(document.getElementById(new_id));
-            new_e.show();
+            new_e.show() 
 
             /*
             var new_side = parseInt($(e).data().side) + 1;
@@ -87,13 +89,18 @@ html
             console.log($('#' + e.id));
             */
           }
+
           function radioClick(e) {
-            console.log(e.target);
-            var for_label = $(e.target).data('for');
-            var label = document.getElementById(for_label);
-            var col_obj = $(e.target).data('col');
+            var inp = e.data.inp;
+            var all_inp = e.data.all_inp;
+            var label = e.data.label;
+            var col_obj = e.data.col;
+            $(inp).prop('disabled', true);
+            _.each(all_inp, function(i) {
+              $(i).prop('disabled', true);
+            });
             console.log(col_obj);
-            if (col_obj.l1_str == $(e.target).val()){
+            if (col_obj.l1_str == $(inp).val()){
               console.log('correct');
               $(label).text($(label).text() + ' ✔');
               $(label).addClass('correct');
@@ -108,9 +115,41 @@ html
             return lst.slice(0,3);
           }
 
+          function compose_question(option_holder, col_obj) {
+            option_holder.empty();
+            var rand_question = col_obj.questions[Math.floor(Math.random() * col_obj.questions.length)];
+            
+            var list = _.shuffle(rand_question.l1_confusers).slice(0,3);
+            list.push(col_obj.l1_str);
+            list = _.shuffle(list);
+            var all_inp = []
+            console.log('list', list);
+            _.each(list, function(o) {
+              console.log(o)
+              var div = $("<div></div>");
+              div.addClass('radioAndLabel');
+              var label = $('<label></label>');
+              label.addClass('english');
+              div.append(label);
+              var input = $("<input></input>");
+              input.prop('type', 'radio');
+              input.prop('name', col_obj.lemcat + 'group');
+              input.prop('data-for', col_obj.lemcat + o + 'label');
+              input.prop('value', o);
+              input.prop('data-col', col_obj)
+              //input.on('click', function() {console.log('clicked inside js');});
+              label.append(input);
+              label.append(o);
+              var feedback_label = $('<label></label>');
+              label.append(feedback_label);
+              all_inp.push(input);
+              input.on('click', {'inp': input, 'label': feedback_label, 'col': col_obj, 'all_inp': all_inp}, radioClick);
+              option_holder.append(div);
+            });
+          }
+
+
     body
-      p
-        | Select a word stem (rows) and a category(columns).
       each message, message_key in groups
         | Group #{message_key}
         br
@@ -137,19 +176,19 @@ html
                             | #{col.l1_str}
                         div.topBar
                           label.submitLink.info(onclick='flipme(this)', data-for='card-' + col.lemcat + '-side=2') flip
-                          label.submitLink.info(onclick='practiceme(this)', data-for='card-' + col.lemcat + '-side=2') practice
+                          //label.submitLink.info(onclick='practiceme(this)', data-for='card-' + col.lemcat + '-side=2') practice
                       div.miniCardLayout(id='card-' + col.lemcat + '-side=3', data-col=col, data-side='3')
                         label.foreign
                           | #{col.l2_str}
-                        div.options
-                          - var rand_question = col.questions[Math.floor(Math.random() * col.questions.length)];
-                          - var list = rand_question.l1_confusers.sort(function(a, b){return 0.5 - Math.random()}).slice(0,3).concat([col.l1_str]).sort(function(a,b){return 0.5 - Math.random()})
-                          each o in list                        
-                            div.radioAndLabel
-                              label.english
-                                input(type='radio', name=col.lemcat+'group', data-for=col.lemcat +  o + 'label',  value=o, data-col=col, onclick='radioClick(event)')
-                                |#{o}
-                                label(id=col.lemcat +  o + 'label')
+                        div.options(id='option_holder-' + col.lemcat)
+                          //- var rand_question = col.questions[Math.floor(Math.random() * col.questions.length)];
+                          //- var list = rand_question.l1_confusers.sort(function(a, b){return 0.5 - Math.random()}).slice(0,3).concat([col.l1_str]).sort(function(a,b){return 0.5 - Math.random()})
+                          //each o in list                        
+                          //  div.radioAndLabel
+                          //    label.english
+                          //      input(type='radio', name=col.lemcat+'group', data-for=col.lemcat +  o + 'label',  value=o, data-col=col, onclick='radioClick(event)')
+                          //      |#{o}
+                          //      label(id=col.lemcat +  o + 'label')
                         div.topBar
                           //- var q = _.sample(col.questions);
                           //- var options = _.shuffle(_.shuffle(q.l1_confusers,4) + [q.l1_str])
