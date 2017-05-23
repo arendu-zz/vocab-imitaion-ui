@@ -10,7 +10,7 @@
                 "isTest": false, 
                 "l1_str": "I accept", 
                 "l2_str": "yo acepto", 
-                "lemcat": "0, Simple-Present,1st,Neu", 
+                "lemcat": "0,Simple-Present,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -182,7 +182,7 @@
                 "isTest": false, 
                 "l1_str": "you accept", 
                 "l2_str": "t\u00fa aceptas", 
-                "lemcat": "0, Simple-Present,2nd,Neu", 
+                "lemcat": "0,Simple-Present,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -354,7 +354,7 @@
                 "isTest": true, 
                 "l1_str": "he accepts", 
                 "l2_str": "\u00e9l acepta", 
-                "lemcat": "0, Simple-Present,3rd,Mas", 
+                "lemcat": "0,Simple-Present,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -560,7 +560,7 @@
                 "isTest": false, 
                 "l1_str": "she accepts", 
                 "l2_str": "ella acepta", 
-                "lemcat": "0, Simple-Present,3rd,Fem", 
+                "lemcat": "0,Simple-Present,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -734,7 +734,7 @@
                 "isTest": true, 
                 "l1_str": "I enter", 
                 "l2_str": "yo entro", 
-                "lemcat": "1, Simple-Present,1st,Neu", 
+                "lemcat": "1,Simple-Present,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -940,7 +940,7 @@
                 "isTest": false, 
                 "l1_str": "you enter", 
                 "l2_str": "t\u00fa entras", 
-                "lemcat": "1, Simple-Present,2nd,Neu", 
+                "lemcat": "1,Simple-Present,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -1110,7 +1110,7 @@
                 "isTest": false, 
                 "l1_str": "he enters", 
                 "l2_str": "\u00e9l entra", 
-                "lemcat": "1, Simple-Present,3rd,Mas", 
+                "lemcat": "1,Simple-Present,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -1280,7 +1280,7 @@
                 "isTest": true, 
                 "l1_str": "she enters", 
                 "l2_str": "ella entra", 
-                "lemcat": "1, Simple-Present,3rd,Fem", 
+                "lemcat": "1,Simple-Present,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -1488,7 +1488,7 @@
                 "isTest": false, 
                 "l1_str": "I watch", 
                 "l2_str": "yo miro", 
-                "lemcat": "2, Simple-Present,1st,Neu", 
+                "lemcat": "2,Simple-Present,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -1660,7 +1660,7 @@
                 "isTest": true, 
                 "l1_str": "you watch", 
                 "l2_str": "t\u00fa miras", 
-                "lemcat": "2, Simple-Present,2nd,Neu", 
+                "lemcat": "2,Simple-Present,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -1866,7 +1866,7 @@
                 "isTest": false, 
                 "l1_str": "he watches", 
                 "l2_str": "\u00e9l mira", 
-                "lemcat": "2, Simple-Present,3rd,Mas", 
+                "lemcat": "2,Simple-Present,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -2038,7 +2038,7 @@
                 "isTest": false, 
                 "l1_str": "she watches", 
                 "l2_str": "ella mira", 
-                "lemcat": "2, Simple-Present,3rd,Fem", 
+                "lemcat": "2,Simple-Present,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -2214,7 +2214,7 @@
                 "isTest": true, 
                 "l1_str": "I accepted", 
                 "l2_str": "yo acept\u00e9", 
-                "lemcat": "0, Simple-Past,1st,Neu", 
+                "lemcat": "0,Simple-Past,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -2420,7 +2420,7 @@
                 "isTest": false, 
                 "l1_str": "you accepted", 
                 "l2_str": "t\u00fa aceptaste", 
-                "lemcat": "0, Simple-Past,2nd,Neu", 
+                "lemcat": "0,Simple-Past,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -2590,7 +2590,7 @@
                 "isTest": false, 
                 "l1_str": "he accepted", 
                 "l2_str": "\u00e9l acept\u00f3", 
-                "lemcat": "0, Simple-Past,3rd,Mas", 
+                "lemcat": "0,Simple-Past,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -2760,7 +2760,7 @@
                 "isTest": true, 
                 "l1_str": "she accepted", 
                 "l2_str": "ella acept\u00f3", 
-                "lemcat": "0, Simple-Past,3rd,Fem", 
+                "lemcat": "0,Simple-Past,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -2968,7 +2968,7 @@
                 "isTest": false, 
                 "l1_str": "I entered", 
                 "l2_str": "yo entr\u00e9", 
-                "lemcat": "1, Simple-Past,1st,Neu", 
+                "lemcat": "1,Simple-Past,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -3140,7 +3140,7 @@
                 "isTest": true, 
                 "l1_str": "you entered", 
                 "l2_str": "t\u00fa entraste", 
-                "lemcat": "1, Simple-Past,2nd,Neu", 
+                "lemcat": "1,Simple-Past,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -3346,7 +3346,7 @@
                 "isTest": false, 
                 "l1_str": "he entered", 
                 "l2_str": "\u00e9l entr\u00f3", 
-                "lemcat": "1, Simple-Past,3rd,Mas", 
+                "lemcat": "1,Simple-Past,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -3518,7 +3518,7 @@
                 "isTest": false, 
                 "l1_str": "she entered", 
                 "l2_str": "ella entr\u00f3", 
-                "lemcat": "1, Simple-Past,3rd,Fem", 
+                "lemcat": "1,Simple-Past,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -3692,7 +3692,7 @@
                 "isTest": false, 
                 "l1_str": "I watched", 
                 "l2_str": "yo mir\u00e9", 
-                "lemcat": "2, Simple-Past,1st,Neu", 
+                "lemcat": "2,Simple-Past,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -3864,7 +3864,7 @@
                 "isTest": false, 
                 "l1_str": "you watched", 
                 "l2_str": "t\u00fa miraste", 
-                "lemcat": "2, Simple-Past,2nd,Neu", 
+                "lemcat": "2,Simple-Past,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -4036,7 +4036,7 @@
                 "isTest": true, 
                 "l1_str": "he watched", 
                 "l2_str": "\u00e9l mir\u00f3", 
-                "lemcat": "2, Simple-Past,3rd,Mas", 
+                "lemcat": "2,Simple-Past,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -4242,7 +4242,7 @@
                 "isTest": false, 
                 "l1_str": "she watched", 
                 "l2_str": "ella mir\u00f3", 
-                "lemcat": "2, Simple-Past,3rd,Fem", 
+                "lemcat": "2,Simple-Past,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -4418,7 +4418,7 @@
                 "isTest": false, 
                 "l1_str": "I will accept", 
                 "l2_str": "yo aceptar\u00e9", 
-                "lemcat": "0, Simple-Future,1st,Neu", 
+                "lemcat": "0,Simple-Future,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -4590,7 +4590,7 @@
                 "isTest": true, 
                 "l1_str": "you will accept", 
                 "l2_str": "t\u00fa aceptar\u00e1s", 
-                "lemcat": "0, Simple-Future,2nd,Neu", 
+                "lemcat": "0,Simple-Future,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -4796,7 +4796,7 @@
                 "isTest": false, 
                 "l1_str": "he will accept", 
                 "l2_str": "\u00e9l aceptar\u00e1", 
-                "lemcat": "0, Simple-Future,3rd,Mas", 
+                "lemcat": "0,Simple-Future,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -4968,7 +4968,7 @@
                 "isTest": false, 
                 "l1_str": "she will accept", 
                 "l2_str": "ella aceptar\u00e1", 
-                "lemcat": "0, Simple-Future,3rd,Fem", 
+                "lemcat": "0,Simple-Future,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -5142,7 +5142,7 @@
                 "isTest": false, 
                 "l1_str": "I will enter", 
                 "l2_str": "yo entrar\u00e9", 
-                "lemcat": "1, Simple-Future,1st,Neu", 
+                "lemcat": "1,Simple-Future,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -5314,7 +5314,7 @@
                 "isTest": false, 
                 "l1_str": "you will enter", 
                 "l2_str": "t\u00fa entrar\u00e1s", 
-                "lemcat": "1, Simple-Future,2nd,Neu", 
+                "lemcat": "1,Simple-Future,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -5486,7 +5486,7 @@
                 "isTest": true, 
                 "l1_str": "he will enter", 
                 "l2_str": "\u00e9l entrar\u00e1", 
-                "lemcat": "1, Simple-Future,3rd,Mas", 
+                "lemcat": "1,Simple-Future,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -5692,7 +5692,7 @@
                 "isTest": false, 
                 "l1_str": "she will enter", 
                 "l2_str": "ella entrar\u00e1", 
-                "lemcat": "1, Simple-Future,3rd,Fem", 
+                "lemcat": "1,Simple-Future,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [
@@ -5866,7 +5866,7 @@
                 "isTest": true, 
                 "l1_str": "I will watch", 
                 "l2_str": "yo mirar\u00e9", 
-                "lemcat": "2, Simple-Future,1st,Neu", 
+                "lemcat": "2,Simple-Future,1st,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -6072,7 +6072,7 @@
                 "isTest": false, 
                 "l1_str": "you will watch", 
                 "l2_str": "t\u00fa mirar\u00e1s", 
-                "lemcat": "2, Simple-Future,2nd,Neu", 
+                "lemcat": "2,Simple-Future,2nd,Neu", 
                 "questions": [
                     {
                         "cats": [
@@ -6242,7 +6242,7 @@
                 "isTest": false, 
                 "l1_str": "he will watch", 
                 "l2_str": "\u00e9l mirar\u00e1", 
-                "lemcat": "2, Simple-Future,3rd,Mas", 
+                "lemcat": "2,Simple-Future,3rd,Mas", 
                 "questions": [
                     {
                         "cats": [
@@ -6412,7 +6412,7 @@
                 "isTest": true, 
                 "l1_str": "she will watch", 
                 "l2_str": "ella mirar\u00e1", 
-                "lemcat": "2, Simple-Future,3rd,Fem", 
+                "lemcat": "2,Simple-Future,3rd,Fem", 
                 "questions": [
                     {
                         "cats": [

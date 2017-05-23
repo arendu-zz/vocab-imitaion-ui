@@ -102,7 +102,7 @@ if __name__ == '__main__':
                 'y': int(pair2cell[p][1]),
                 'l1_str': p[1], 
                 'l2_str': p[0],
-                'lemcat': str(pair2lem[p]) + ', ' + ','.join(pair2cats[p]),
+                'lemcat': str(pair2lem[p]) + ',' + ','.join(pair2cats[p]),
                 'questions': pair2questions[p]}
             xo = dump_obj.get(o['x'], [])
             xo.append(o)

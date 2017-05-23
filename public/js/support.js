@@ -34,3 +34,20 @@ Array.prototype.shuffle = function() {
   }
   return this;
 };
+
+function Interval(fn, time) {
+  var timer = false;
+  this.start = function() {
+    if (!this.isRunning())
+      //timer = setInterval(fn, time);
+      timer = setTimeout(fn, time);
+  };
+  this.stop = function() {
+    //clearInterval(timer);
+    clearTimeout(timer);
+    timer = false;
+  };
+  this.isRunning = function() {
+    return timer !== false;
+  };
+}

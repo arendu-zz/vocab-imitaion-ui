@@ -56,9 +56,19 @@ input::-webkit-calendar-picker-indicator {
   color: #FFA500;
 }
 
+.dotBar {
+  max-height: 10px;
+  width: 100%;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  align-items: center;
+}
+
+
 .topBar {
-  height: 25px;
-  width: 90%;
+  max-height: 25px;
+  width: 100%;
   display: -webkit-flex;
   -webkit-flex-direction: row;
   flex-direction: row;
@@ -115,7 +125,9 @@ form {}
   border: 1px solid DimGrey;
   min-width: 130px;
   min-height: 150px;
+  border-radius: 5px;
   padding: 5px;
+  box-shadow: 2px 2px 1px #868686;
 }
 
 .cardLayout {
@@ -195,7 +207,7 @@ label.small {
 }
 
 .option {
-  font-size: 28px;
+  font-size: 16px;
 }
 
 .info {
@@ -235,6 +247,10 @@ label {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.text_center {
+  text-align: center;
 }
 
 input[type=button] {
