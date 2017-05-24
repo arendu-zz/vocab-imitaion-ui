@@ -182,9 +182,9 @@ var server = app.listen(app.get('port'), function() {
 });
 
 var http = require('http').Server(app);
-var io = require('socket.io').listen(server);
+//var io = require('socket.io').listen(server);
 http.listen(8001, "127.0.0.1");
-
+/*
 io.on('connection', function(socket) {
   var clientId = socket.id;
   console.log("connected to client..." + clientId);
@@ -216,3 +216,4 @@ io.on('connection', function(socket) {
 
   });
 });
+*/
