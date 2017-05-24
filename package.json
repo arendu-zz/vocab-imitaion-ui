@@ -12,7 +12,6 @@
         "underscore": "*",
         "body-parser": "*",
         "request-promise": "*",
-        "socket.io": "*",
         "express": "4.x",
         "body-parser": "*",
         "cookie-parser": "*",
