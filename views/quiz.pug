@@ -18,6 +18,7 @@ html
         history.replaceState(stateObj, "Start", "/");
       });
       function feedback(e){
+      var rv = parseFloat('#{reward}');
         var quiz_questions =  $(e.target).data('allqq');
         _.each(quiz_questions, function(qq) {
           var inp = $(document.getElementById('input-' + qq.full.lemcat));
@@ -28,6 +29,7 @@ html
             if (inp.val() == qq.full.l1_str){
               feedback_label.text(' ✔');
               feedback_label.addClass('correct');
+              rv += 0.10
               }else{
               feedback_label.text(' ✘');
               feedback_label.addClass('wrong');
@@ -37,6 +39,7 @@ html
             if (inp.val() == qq.full.l2_str){
               feedback_label.text(' ✔');
               feedback_label.addClass('correct');
+              rv += 0.10
               }else{
               feedback_label.text(' ✘');
               feedback_label.addClass('wrong');
@@ -44,8 +47,13 @@ html
           }
           $(label).append(feedback_label);
         });
+        $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
       }
   body
+    div.fixed#fixeddiv 
+      |Reward: #{reward}
+    br
+    br
     div.quizHolder
       each qq, qq_idx in quiz_questions
         - var d = qq.direction == 'f2e'
@@ -57,4 +65,5 @@ html
           label.english.prompt(id='label-' + qq.full.lemcat, data-qq=qq)
             | #{qq.prompt_str}:
             input(id = 'input-' + qq.full.lemcat, type='text')
-      input(type='button', onclick='feedback(event)' value='Submit' data-allqq=quiz_questions)
+    p
+      input.submitLink#submitBtn(type='button', onclick='feedback(event)' value='Submit' data-allqq=quiz_questions)

@@ -69,6 +69,13 @@ html
           }
         
           function flipme(e) {
+            var rv = $('#rewardVal').val()
+            if (rv > 0.0) {
+              rv = parseFloat(rv) - 0.050;
+            }
+            $('#rewardVal').prop('value', rv);
+            console.log(rv);
+            $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
             event.stopPropagation();
             e = event.target;
             $('div[data-side=2]').hide();
@@ -77,9 +84,19 @@ html
             var for_id = $(e).data('for');
             var e = document.getElementById(for_id);
             cycleme(e);
+
           }
 
           function practiceme(event) {
+            if (hide_interval.isRunning){
+              hide_interval.stop();
+            }
+            var rv = $('#rewardVal').val()
+            if (rv > 0.0) {
+              rv = parseFloat(rv) - 0.010;
+            }
+            $('#rewardVal').prop('value', rv);
+            $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
             event.stopPropagation();
             e = event.target;
             $('div[data-side=2]').hide();
@@ -222,9 +239,10 @@ html
 
 
     body
+      div.fixed#fixeddiv 
+        |Reward: $1.0
       each group, group_key in groups
-        br
-        h3 Group #{group_key}
+        h4 Group #{group_key}
         div.cardHolder
           -var rand_group = group.sort(function(a,b) {return 0.5 - Math.random()}) 
           each col, col_key in rand_group
@@ -262,11 +280,9 @@ html
                   //      |#{o}
                   //      label(id=col.lemcat +  o + 'label')
                 div.topBar
-
+        br
       p
-        form
-          h3
-            | Proceed to 
-            button.submitLink(formaction='/quiz')
-              |quiz
+        form#endform
+          input#rewardVal(type='hidden', name='reward', value=reward)
+          button.submitLink(formaction='/quiz') Take Quiz
 

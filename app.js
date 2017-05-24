@@ -27,16 +27,18 @@ for (var row_key in global_data) {
     for (var po_idx  in po){
       var pair_obj = po[po_idx];
       console.log(row_key, col_key, pair_obj);
-
-      var lst = global_groups[row_key];
-      if (lst === undefined){
-        lst = [pair_obj];
+      
+      if (pair_obj.isTest) {
       }else{
-        console.log(lst);
-        lst.push(pair_obj);
+        var lst = global_groups[row_key];
+        if (lst === undefined){
+          lst = [pair_obj];
+        }else{
+          console.log(lst);
+          lst.push(pair_obj);
+        }
+        global_groups[row_key] = lst;
       }
-      global_groups[row_key] = lst;
-
       global_lemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
       global_pair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
       if (pair_obj.isTest){
@@ -54,12 +56,14 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
 app.get('/quiz', function(req, res) {
+  var reward = parseFloat(req.query.reward);
   global_quizpairs = _.shuffle(global_quizpairs);
   var quiz_list = [];
   for (var sp_key in global_quizpairs) {
     var sp = global_quizpairs[sp_key];
     var qq = {};
-    var direction = _.sample(['e2f', 'f2e']);
+    //var direction = _.sample(['e2f', 'f2e']);
+    var direction = _.sample(['f2e']);
     if (direction == 'f2e') {
       qq.prompt_str = sp.l2_str;
       qq.direction = direction;
@@ -73,7 +77,8 @@ app.get('/quiz', function(req, res) {
   }
   res.render('quiz',{
       title: 'Quiz',
-      quiz_questions: quiz_list
+      quiz_questions: quiz_list,
+      reward: reward.toFixed(2)
   });
 });
 
@@ -156,7 +161,8 @@ app.get('/', function(req, res) {
   res.render('card_selection_rand', {
     title: 'Select Training Pair',
     headers: global_col_headers,
-    groups: global_groups 
+    groups: global_groups,
+    reward: 1.0
   });
 });
 

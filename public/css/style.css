@@ -15,7 +15,10 @@
   width: 600px;
 }
 
-.singleCardHolder {
+.fixed {
+  position: fixed;
+  top: 2%;
+  right: 45%;
 }
 
 .submitLink:disabled {
@@ -71,7 +74,6 @@ input::-webkit-calendar-picker-indicator {
   align-items: center;
 }
 
-
 .topBar {
   max-height: 25px;
   width: 100%;
@@ -81,8 +83,6 @@ input::-webkit-calendar-picker-indicator {
   justify-content: space-between;
   align-items: center;
 }
-
-form {}
 
 .indexLayout {
   display: -webkit-flex;
@@ -180,6 +180,7 @@ form {}
   margin-right: auto;
   margin-left: auto;
 }
+
 .quizHolder {
   display: -webkit-flex;
   -webkit-flex-direction: column;
