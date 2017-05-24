@@ -15,20 +15,27 @@ var global_data = JSON.parse(fs.readFileSync('./data/es-en-medium.vocab.question
 var global_col_headers = _.map(global_data["0"], function(row) {
   return row.cats.join(', ').replace('Simple-', '');
 });
+
 var global_lemcat2pair = {};
 var global_pair2questions = {};
 var global_quizpairs = [];
 
 for (var row_key in global_data) {
   for (var col_key in global_data[row_key]) {
-    pair_obj = global_data[row_key][col_key];
-    global_lemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
-    global_pair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
-    if (pair_obj.isTest){
-      global_quizpairs.push(pair_obj);
+    console.log('here!! po', row_key, col_key);
+    po = global_data[row_key][col_key];
+    for (var po_idx  in po){
+      var pair_obj = po[po_idx];
+      global_lemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
+      global_pair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
+      if (pair_obj.isTest){
+        global_quizpairs.push(pair_obj);
+      }else{
+      }
     }
   }
 }
+
 
 app.set('port', process.env.PORT || 8001);
 app.use(bodyParser.json());
@@ -37,23 +44,26 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
 app.get('/quiz', function(req, res) {
-  var sampled_pairs = _.sample(global_quizpairs, 10);
-  var quiz_questions = [];
-  for (var sp in sampled_pairs) {
-    var quiz_question = {};
+  global_quizpairs = _.shuffle(global_quizpairs);
+  var quiz_list = [];
+  for (var sp_key in global_quizpairs) {
+    var sp = global_quizpairs[sp_key];
+    var qq = {};
     var direction = _.sample(['e2f', 'f2e']);
     if (direction == 'f2e') {
-      quiz_question.prompt_str = sp.l2_str;
-      quiz_question.direction = direction;
+      qq.prompt_str = sp.l2_str;
+      qq.direction = direction;
     }else{
-      quiz_question.prompt_str = sp.l1_str;
-      quiz_question.direction = direction;
+      qq.prompt_str = sp.l1_str;
+      qq.direction = direction;
     }
-    quiz_questions.push(quiz_question);
+    qq.full = sp;
+    console.log(qq);
+    quiz_list.push(qq);
   }
   res.render('quiz',{
       title: 'Quiz',
-      quiz_questions: quiz_questions
+      quiz_questions: quiz_list
   });
 });
 
