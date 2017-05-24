@@ -1,0 +1,272 @@
+doctype html
+html
+    head
+        title= title
+        link(href='/css/style.css', rel='stylesheet')
+        link(rel='stylesheet', href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css', type='text/css', media='all')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js', type='text/javascript')
+        script(src='/js/socket.io.js', type='text/javascript')
+        script(src='/js/support.js', type='text/javascript')
+        script(src='/js/underscore-min.js', type='text/javascript')
+        script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', type='text/javascript')
+        script(type='text/javascript').
+          var hide_interval = new Interval(hideall, 2000);
+
+
+          Array.prototype.shuffle = function() {
+            var i = this.length,
+              j, temp;
+            if (i === 0) return this;
+            while (--i) {
+              j = Math.floor(Math.random() * (i + 1));
+              temp = this[i];
+              this[i] = this[j];
+              this[j] = temp;
+            }
+            return this;
+          };
+          console.log("here #{IP}");
+          var socket = io.connect('#{IP}');
+          var _list = [1,2,3,4];
+          $(document).ready(function ($) {
+            if (jQuery.ui) {
+              console.log('found jq ui')
+            } else {
+              alert("no jquery ui")
+            }
+            $('div[data-side=2]').hide();
+            $('div[data-side=3]').hide();
+            $('div[data-side=3]').on('show',function (event){
+              console.log('on show', event.target);
+            });
+            var stateObj = { startPage: "start" };
+            history.replaceState(stateObj, "Start", "/");
+          });
+          
+          function get_card_data(e) {
+            if (e.id.endsWith('-side=1')){
+              return $(e).data('col');
+            }else{
+              var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=1';
+              var new_e = $(document.getElementById(new_id));
+              return $(new_e).data('col');
+            }
+          }
+
+          function hideall(){
+            $('div[data-side=2]').hide();
+            $('div[data-side=3]').hide();
+            $('div[data-side=1]').each(function() {
+              col_obj = $(this).data('col');
+              var topBar = $(document.getElementById('topBar' + col_obj.lemcat));
+              console.log(col_obj.lemcat, col_obj.flips, topBar);
+              if (col_obj.flips == null){
+                $(this).show();
+              }else{
+                $(this).show(5, activity(topBar, col_obj));
+              }
+            }); 
+          }
+        
+          function flipme(e) {
+            event.stopPropagation();
+            e = event.target;
+            $('div[data-side=2]').hide();
+            $('div[data-side=3]').hide();
+            $('div[data-side=1]').show();
+            var for_id = $(e).data('for');
+            var e = document.getElementById(for_id);
+            cycleme(e);
+          }
+
+          function practiceme(event) {
+            event.stopPropagation();
+            e = event.target;
+            $('div[data-side=2]').hide();
+            $('div[data-side=3]').hide();
+            $('div[data-side=1]').show();
+            var for_id = $(e).data('for');
+            var e = document.getElementById(for_id);
+            var col_obj = get_card_data(e);
+            $(e).hide();
+            var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=1';
+            var new_e = $(document.getElementById(new_id));
+            new_e.hide();
+            var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=3';
+            var new_e = $(document.getElementById(new_id));
+            var option_holder = $(document.getElementById('option_holder-' + col_obj.lemcat));
+            new_e.show(5, compose_question(option_holder, col_obj)) 
+          }
+          
+          function cycleme(e) {
+            var col_obj = get_card_data(e);
+            console.log(col_obj.lemcat);
+            if (col_obj.flips == null) {
+              col_obj.flips = [];
+            }else if (col_obj.flips.length > 13) {
+              col_obj.flips = col_obj.flips.slice(1,14);
+            }
+            console.log(col_obj.flips);
+            col_obj.flips.push(1);
+            $(e).hide();
+            var side = e.id.split('-').slice(-1)[0];
+            side = side.split('=').slice(-1)[0];
+            var new_side = parseInt(side) + 1;
+            if (new_side > 2) {
+              new_side = 1;
+            }
+            var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=' + new_side;
+            var new_e = $(document.getElementById(new_id));
+            if (new_side == 1){
+              var topBar = $(new_e.getElementById('topBar' + col_obj.lemcat));
+              new_e.show(5, activity(topBar, col_obj));
+            }else{
+              new_e.show() 
+            }
+            if (hide_interval.isRunning){
+              hide_interval.stop();
+            }
+            hide_interval.start();
+
+            /*
+            var new_side = parseInt($(e).data().side) + 1;
+            if (new_side > 3) {
+              new_side = 1;
+            }
+            console.log($('#' + e.id));
+            */
+          }
+
+          function radioClick(e) {
+            console.log('here');
+            e.stopPropagation();
+            var inp = e.data.inp;
+            var all_inp = e.data.all_inp;
+            var label = e.data.label;
+            var col_obj = e.data.col;
+            if (col_obj.flips == null) {
+              col_obj.flips = [];
+            }else if (col_obj.flips.length > 13) {
+              col_obj.flips = col_obj.flips.slice(1,14);
+            }
+            $(inp).prop('disabled', true);
+            _.each(all_inp, function(i) {
+              $(i).prop('disabled', true);
+            });
+            console.log(col_obj);
+            if (col_obj.l1_str == $(inp).val()){
+              console.log('correct');
+              $(label).text($(label).text() + ' ✔');
+              $(label).addClass('correct');
+              col_obj.flips.push(2);
+            }else {
+              console.log('wrong');
+              $(label).text($(label).text() + ' ✘');
+              $(label).addClass('wrong');
+              col_obj.flips.push(3);
+            }
+            if (hide_interval.isRunning){
+              hide_interval.stop();
+            }
+            hide_interval.start();
+          }
+
+          function activity(topBar, col_obj) {
+            topBar.empty();
+            _.each(col_obj.flips, function(f){
+              var l = $('<label></label>')
+              l.html('●');
+              if (f == 1){ 
+                l.addClass('english');
+              }else if (f == 2) {
+                l.addClass('correct');
+              }else {
+                l.addClass('wrong');
+              }
+              topBar.append(l);
+            });
+          }
+
+          function compose_question(option_holder, col_obj) {
+            option_holder.empty();
+            var rand_question = col_obj.questions[Math.floor(Math.random() * col_obj.questions.length)];
+            var list = _.shuffle(rand_question.l1_confusers).slice(0,3);
+            list.push(col_obj.l1_str);
+            list = _.shuffle(list);
+            var all_inp = []
+            console.log('list', list);
+            _.each(list, function(o) {
+              console.log(o)
+              var div = $("<div></div>");
+              div.addClass('radioAndLabel');
+              var label = $('<label></label>');
+              label.addClass('english');
+              label.addClass('option');
+              div.append(label);
+              var input = $("<input></input>");
+              input.prop('type', 'radio');
+              input.prop('name', col_obj.lemcat + 'group');
+              input.prop('data-for', col_obj.lemcat + o + 'label');
+              input.prop('value', o);
+              input.prop('data-col', col_obj)
+              //input.on('click', function() {console.log('clicked inside js');});
+              label.append(input);
+              label.append(o);
+              var feedback_label = $('<label></label>');
+              label.append(feedback_label);
+              all_inp.push(input);
+              input.on('click', {'inp': input, 'label': feedback_label, 'col': col_obj, 'all_inp': all_inp}, radioClick);
+              option_holder.append(div);
+            });
+          }
+
+
+    body
+      each group, group_key in groups
+        br
+        h3 Group #{group_key}
+        div.cardHolder
+          -var rand_group = group.sort(function(a,b) {return 0.5 - Math.random()}) 
+          each col, col_key in rand_group
+            div.singleCardHolder
+              div.miniCardLayout(id='card-' + col.lemcat + '-side=1', data-col=col,  data-side='1')
+                div.dotBar(id='topBar' + col.lemcat)
+                div.holder
+                  label.foreign.text_center
+                    | #{col.l2_str}
+                div.topBar
+                  label.submitLink.info(onclick='flipme(event)', data-for='card-' + col.lemcat + '-side=1') flip
+                  label.submitLink.info(onclick='practiceme(event)', data-for='card-' + col.lemcat + '-side=1') practice
+
+              div.miniCardLayout(id='card-' + col.lemcat + '-side=2', data-side='2')
+                div.topBar
+                div.holder
+                  label.foreign.text_center
+                    | #{col.l2_str}
+                  label.english.text_center
+                    | #{col.l1_str}
+                div.topBar
+                  //label.submitLink.info(onclick='flipme(event)', data-for='card-' + col.lemcat + '-side=2') flip
+                  //label.submitLink.info(onclick='practiceme(this)', data-for='card-' + col.lemcat + '-side=2') practice
+              div.miniCardLayout(id='card-' + col.lemcat + '-side=3', data-side='3')
+                div.topBar
+                label.foreign.text_center
+                  | #{col.l2_str}
+                div.options(id='option_holder-' + col.lemcat)
+                  //- var rand_question = col.questions[Math.floor(Math.random() * col.questions.length)];
+                  //- var list = rand_question.l1_confusers.sort(function(a, b){return 0.5 - Math.random()}).slice(0,3).concat([col.l1_str]).sort(function(a,b){return 0.5 - Math.random()})
+                  //each o in list                        
+                  //  div.radioAndLabel
+                  //    label.english
+                  //      input(type='radio', name=col.lemcat+'group', data-for=col.lemcat +  o + 'label',  value=o, data-col=col, onclick='radioClick(event)')
+                  //      |#{o}
+                  //      label(id=col.lemcat +  o + 'label')
+                div.topBar
+
+      p
+        form
+          h3
+            | Proceed to 
+            button.submitLink(formaction='/quiz')
+              |quiz
+

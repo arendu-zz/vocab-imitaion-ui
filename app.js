@@ -19,13 +19,24 @@ var global_col_headers = _.map(global_data["0"], function(row) {
 var global_lemcat2pair = {};
 var global_pair2questions = {};
 var global_quizpairs = [];
+var global_groups = {};
 
 for (var row_key in global_data) {
   for (var col_key in global_data[row_key]) {
-    console.log('here!! po', row_key, col_key);
     po = global_data[row_key][col_key];
     for (var po_idx  in po){
       var pair_obj = po[po_idx];
+      console.log(row_key, col_key, pair_obj);
+
+      var lst = global_groups[row_key];
+      if (lst === undefined){
+        lst = [pair_obj];
+      }else{
+        console.log(lst);
+        lst.push(pair_obj);
+      }
+      global_groups[row_key] = lst;
+
       global_lemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
       global_pair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
       if (pair_obj.isTest){
@@ -35,7 +46,6 @@ for (var row_key in global_data) {
     }
   }
 }
-
 
 app.set('port', process.env.PORT || 8001);
 app.use(bodyParser.json());
@@ -143,10 +153,10 @@ app.get('/', function(req, res) {
   var col_headers = _.map(global_data["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
-  res.render('card_selection', {
+  res.render('card_selection_rand', {
     title: 'Select Training Pair',
     headers: global_col_headers,
-    groups: global_data
+    groups: global_groups 
   });
 });
 

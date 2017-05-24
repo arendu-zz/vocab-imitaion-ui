@@ -46,7 +46,7 @@ html
         });
       }
   body
-    div.holder
+    div.quizHolder
       each qq, qq_idx in quiz_questions
         - var d = qq.direction == 'f2e'
         if d
@@ -58,6 +58,3 @@ html
             | #{qq.prompt_str}:
             input(id = 'input-' + qq.full.lemcat, type='text')
       input(type='button', onclick='feedback(event)' value='Submit' data-allqq=quiz_questions)
-        
-
-
