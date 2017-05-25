@@ -36,6 +36,7 @@ html
             }
             $('div[data-side=2]').hide();
             $('div[data-side=3]').hide();
+            $('div[data-side=4]').hide();
             $('div[data-side=3]').on('show',function (event){
               console.log('on show', event.target);
             });
@@ -56,6 +57,7 @@ html
           function hideall(){
             $('div[data-side=2]').hide();
             $('div[data-side=3]').hide();
+            $('div[data-side=4]').hide();
             $('div[data-side=1]').each(function() {
               col_obj = $(this).data('col');
               var topBar = $(document.getElementById('topBar' + col_obj.lemcat));
@@ -80,11 +82,41 @@ html
             e = event.target;
             $('div[data-side=2]').hide();
             $('div[data-side=3]').hide();
+            $('div[data-side=4]').hide();
+            $('div[data-side=1]').show();
+            //var for_id = $(e.target).data('for');
+            //var e = document.getElementById(for_id);
+            cycleme(e);
+
+          }
+
+          function typeme(event) {
+            if (hide_interval.isRunning){
+              hide_interval.stop();
+            }
+            var rv = $('#rewardVal').val()
+            if (rv > 0.0) {
+              rv = parseFloat(rv) - 0.010;
+            }
+            $('#rewardVal').prop('value', rv);
+            $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
+            event.stopPropagation();
+            e = event.target;
+            $('div[data-side=2]').hide();
+            $('div[data-side=3]').hide();
+            $('div[data-side=4]').hide();
             $('div[data-side=1]').show();
             var for_id = $(e).data('for');
             var e = document.getElementById(for_id);
-            cycleme(e);
-
+            var col_obj = get_card_data(e);
+            $(e).hide();
+            var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=1';
+            var new_e = $(document.getElementById(new_id));
+            new_e.hide();
+            var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=4';
+            var new_e = $(document.getElementById(new_id));
+            var option_holder = $(document.getElementById('option_holder-' + col_obj.lemcat));
+            new_e.show();
           }
 
           function practiceme(event) {
@@ -101,6 +133,7 @@ html
             e = event.target;
             $('div[data-side=2]').hide();
             $('div[data-side=3]').hide();
+            $('div[data-side=4]').hide();
             $('div[data-side=1]').show();
             var for_id = $(e).data('for');
             var e = document.getElementById(for_id);
@@ -116,6 +149,7 @@ html
           }
           
           function cycleme(e) {
+            console.log(e);
             var col_obj = get_card_data(e);
             console.log(col_obj.lemcat);
             if (col_obj.flips == null) {
@@ -154,6 +188,33 @@ html
             */
           }
 
+          function keypress(e) {
+            console.log(e.key, e.keyCode, $(e.target).val());
+            if (e.keyCode == 13) {
+              var card = document.getElementById($(e.target).data('for'));
+              var col_obj = get_card_data(card);
+              if (col_obj.flips == null) {
+                col_obj.flips = [];
+              }else if (col_obj.flips.length > 13) {
+                col_obj.flips = col_obj.flips.slice(1,14);
+              }
+              $(e.target).prop('disabled', true);
+              var label = document.getElementById($(e.target).data('label'));
+              if (col_obj.l1_str.normalize('NFC') == $(e.target).val().normalize('NFC')) {
+                $(label).text($(label).text() + ' ✔');
+                $(label).addClass('correct');
+                col_obj.flips.push(2);
+              }else{
+                $(label).text($(label).text() + ' ✘');
+                $(label).addClass('wrong');
+                col_obj.flips.push(3);
+              }
+              if (hide_interval.isRunning){
+                hide_interval.stop();
+              }
+              hide_interval.start();
+            }
+          }
           function radioClick(e) {
             console.log('here');
             e.stopPropagation();
@@ -247,14 +308,15 @@ html
           -var rand_group = group.sort(function(a,b) {return 0.5 - Math.random()}) 
           each col, col_key in rand_group
             div.singleCardHolder
-              div.miniCardLayout(id='card-' + col.lemcat + '-side=1', data-col=col,  data-side='1')
+              div.miniCardLayout(id='card-' + col.lemcat + '-side=1', data-col=col,  data-side='1', onclick='flipme(this)')
                 div.dotBar(id='topBar' + col.lemcat)
                 div.holder
                   label.foreign.text_center
                     | #{col.l2_str}
                 div.topBar
-                  label.submitLink.info(onclick='flipme(event)', data-for='card-' + col.lemcat + '-side=1') flip
-                  label.submitLink.info(onclick='practiceme(event)', data-for='card-' + col.lemcat + '-side=1') practice
+                  //label.submitLink.info(onclick='flipme(event)', data-for='card-' + col.lemcat + '-side=1') flip
+                  label.submitLink.info(onclick='practiceme(event)', data-for='card-' + col.lemcat + '-side=1') MC
+                  label.submitLink.info(onclick='typeme(event)', data-for='card-' + col.lemcat + '-side=1') TP 
 
               div.miniCardLayout(id='card-' + col.lemcat + '-side=2', data-side='2')
                 div.topBar
@@ -271,14 +333,14 @@ html
                 label.foreign.text_center
                   | #{col.l2_str}
                 div.options(id='option_holder-' + col.lemcat)
-                  //- var rand_question = col.questions[Math.floor(Math.random() * col.questions.length)];
-                  //- var list = rand_question.l1_confusers.sort(function(a, b){return 0.5 - Math.random()}).slice(0,3).concat([col.l1_str]).sort(function(a,b){return 0.5 - Math.random()})
-                  //each o in list                        
-                  //  div.radioAndLabel
-                  //    label.english
-                  //      input(type='radio', name=col.lemcat+'group', data-for=col.lemcat +  o + 'label',  value=o, data-col=col, onclick='radioClick(event)')
-                  //      |#{o}
-                  //      label(id=col.lemcat +  o + 'label')
+                div.topBar
+              div.miniCardLayout(id='card-' + col.lemcat + '-side=4', data-side='4')
+                div.topBar
+                label.foreign.text_center
+                  | #{col.l2_str}
+                input(id = 'input-' + col.lemcat, type='text', data-label='label-type-result-' + col.lemcat, data-for='card-' + col.lemcat + '-side=1', onkeyup='keypress(event)')
+                label(id='label-type-result-' + col.lemcat)
+                div.options(id='option_holder-' + col.lemcat)
                 div.topBar
         br
       p

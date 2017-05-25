@@ -26,15 +26,12 @@ for (var row_key in global_data) {
     po = global_data[row_key][col_key];
     for (var po_idx  in po){
       var pair_obj = po[po_idx];
-      console.log(row_key, col_key, pair_obj);
-      
       if (pair_obj.isTest) {
       }else{
         var lst = global_groups[row_key];
         if (lst === undefined){
           lst = [pair_obj];
         }else{
-          console.log(lst);
           lst.push(pair_obj);
         }
         global_groups[row_key] = lst;
@@ -72,7 +69,6 @@ app.get('/quiz', function(req, res) {
       qq.direction = direction;
     }
     qq.full = sp;
-    console.log(qq);
     quiz_list.push(qq);
   }
   res.render('quiz',{
