@@ -7,6 +7,9 @@
   cursor: pointer;
 }
 
+.NPE {
+    pointer-events: none;
+}
 .cardHolder {
   display: -webkit-flex;
   -webkit-flex-direction: row;

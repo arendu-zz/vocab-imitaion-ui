@@ -37,15 +37,13 @@ html
             $('div[data-side=2]').hide();
             $('div[data-side=3]').hide();
             $('div[data-side=4]').hide();
-            $('div[data-side=3]').on('show',function (event){
-              console.log('on show', event.target);
-            });
+            $('div[data-side=1]').show();
             var stateObj = { startPage: "start" };
             history.replaceState(stateObj, "Start", "/");
           });
           
           function get_card_data(e) {
-            if (e.id.endsWith('-side=1')){
+            if (e.id.endsWith('-side=1') && e.id.startsWith('card-')){
               return $(e).data('col');
             }else{
               var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=1';
@@ -61,7 +59,6 @@ html
             $('div[data-side=1]').each(function() {
               col_obj = $(this).data('col');
               var topBar = $(document.getElementById('topBar' + col_obj.lemcat));
-              console.log(col_obj.lemcat, col_obj.flips, topBar);
               if (col_obj.flips == null){
                 $(this).show();
               }else{
@@ -71,23 +68,23 @@ html
           }
         
           function flipme(e) {
-            var rv = $('#rewardVal').val()
-            if (rv > 0.0) {
-              rv = parseFloat(rv) - 0.050;
+            if (e.id.endsWith('-side=1') && e.id.startsWith('card-')){
+              var rv = $('#rewardVal').val()
+              if (rv > 0.0) {
+                rv = parseFloat(rv) - 0.050;
+              }
+              $('#rewardVal').prop('value', rv);
+              $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
+              $('div[data-side=2]').hide();
+              $('div[data-side=3]').hide();
+              $('div[data-side=4]').hide();
+              $('div[data-side=1]').show();
+              //var for_id = $(e.target).data('for');
+              //var e = document.getElementById(for_id);
+              cycleme(e);
+            }else{
+              console.log('skip click', e);
             }
-            $('#rewardVal').prop('value', rv);
-            console.log(rv);
-            $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
-            event.stopPropagation();
-            e = event.target;
-            $('div[data-side=2]').hide();
-            $('div[data-side=3]').hide();
-            $('div[data-side=4]').hide();
-            $('div[data-side=1]').show();
-            //var for_id = $(e.target).data('for');
-            //var e = document.getElementById(for_id);
-            cycleme(e);
-
           }
 
           function typeme(event) {
@@ -116,6 +113,13 @@ html
             var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=4';
             var new_e = $(document.getElementById(new_id));
             var option_holder = $(document.getElementById('option_holder-' + col_obj.lemcat));
+            var type_e  = document.getElementById('input-' + col_obj.lemcat);
+            var type_result_e  = document.getElementById('input-result-' + col_obj.lemcat);
+            $(type_e).val('');
+            $(type_e).prop('disabled', false);
+            $(type_result_e).text('')
+            $(type_result_e).removeClass('wrong');
+            $(type_result_e).removeClass('correct');
             new_e.show();
           }
 
@@ -145,13 +149,11 @@ html
             var new_id = e.id.split('-').slice(0, -1).join('-') + '-side=3';
             var new_e = $(document.getElementById(new_id));
             var option_holder = $(document.getElementById('option_holder-' + col_obj.lemcat));
-            new_e.show(5, compose_question(option_holder, col_obj)) 
+            new_e.show(0, compose_question(option_holder, col_obj)) 
           }
           
           function cycleme(e) {
-            console.log(e);
             var col_obj = get_card_data(e);
-            console.log(col_obj.lemcat);
             if (col_obj.flips == null) {
               col_obj.flips = [];
             }else if (col_obj.flips.length > 13) {
@@ -184,12 +186,10 @@ html
             if (new_side > 3) {
               new_side = 1;
             }
-            console.log($('#' + e.id));
             */
           }
 
           function keypress(e) {
-            console.log(e.key, e.keyCode, $(e.target).val());
             if (e.keyCode == 13) {
               var card = document.getElementById($(e.target).data('for'));
               var col_obj = get_card_data(card);
@@ -200,7 +200,13 @@ html
               }
               $(e.target).prop('disabled', true);
               var label = document.getElementById($(e.target).data('label'));
-              if (col_obj.l1_str.normalize('NFC') == $(e.target).val().normalize('NFC')) {
+              var prompt_str;
+              if (col_obj.direction == 'f2e') {
+                prompt_str = col_obj.l1_str;
+              }else{
+                prompt_str = col_obj.l2_str;
+              }
+              if (RemoveAccents(prompt_str).toUpperCase() == RemoveAccents($(e.target).val()).toUpperCase()) {
                 $(label).text($(label).text() + ' ✔');
                 $(label).addClass('correct');
                 col_obj.flips.push(2);
@@ -216,7 +222,6 @@ html
             }
           }
           function radioClick(e) {
-            console.log('here');
             e.stopPropagation();
             var inp = e.data.inp;
             var all_inp = e.data.all_inp;
@@ -231,14 +236,17 @@ html
             _.each(all_inp, function(i) {
               $(i).prop('disabled', true);
             });
-            console.log(col_obj);
-            if (col_obj.l1_str == $(inp).val()){
-              console.log('correct');
+            var prompt_str;
+            if (col_obj.direction == 'f2e') {
+              prompt_str = col_obj.l1_str;
+            }else{
+              prompt_str = col_obj.l2_str;
+            }
+            if (prompt_str == $(inp).val()){
               $(label).text($(label).text() + ' ✔');
               $(label).addClass('correct');
               col_obj.flips.push(2);
             }else {
-              console.log('wrong');
               $(label).text($(label).text() + ' ✘');
               $(label).addClass('wrong');
               col_obj.flips.push(3);
@@ -268,17 +276,25 @@ html
           function compose_question(option_holder, col_obj) {
             option_holder.empty();
             var rand_question = col_obj.questions[Math.floor(Math.random() * col_obj.questions.length)];
-            var list = _.shuffle(rand_question.l1_confusers).slice(0,3);
-            list.push(col_obj.l1_str);
+            var list;
+            if (col_obj.direction == 'f2e'){
+              list = _.shuffle(rand_question.l1_confusers).slice(0,3);
+              list.push(col_obj.l1_str);
+            }else {
+              list = _.shuffle(rand_question.l2_confusers).slice(0,3);
+              list.push(col_obj.l2_str);
+            }
             list = _.shuffle(list);
             var all_inp = []
-            console.log('list', list);
             _.each(list, function(o) {
-              console.log(o)
               var div = $("<div></div>");
               div.addClass('radioAndLabel');
               var label = $('<label></label>');
-              label.addClass('english');
+              if (col_obj.direction == 'f2e'){
+                label.addClass('english');
+              }else {
+                label.addClass('foreign');
+              }
               label.addClass('option');
               div.append(label);
               var input = $("<input></input>");
@@ -311,8 +327,13 @@ html
               div.miniCardLayout(id='card-' + col.lemcat + '-side=1', data-col=col,  data-side='1', onclick='flipme(this)')
                 div.dotBar(id='topBar' + col.lemcat)
                 div.holder
-                  label.foreign.text_center
-                    | #{col.l2_str}
+                  -var d = col.direction == 'f2e'
+                  if d
+                    label.foreign.text_center
+                      | #{col.l2_str}
+                  else
+                    label.english.text_center
+                      | #{col.l1_str}
                 div.topBar
                   //label.submitLink.info(onclick='flipme(event)', data-for='card-' + col.lemcat + '-side=1') flip
                   label.submitLink.info(onclick='practiceme(event)', data-for='card-' + col.lemcat + '-side=1') MC
@@ -321,26 +342,42 @@ html
               div.miniCardLayout(id='card-' + col.lemcat + '-side=2', data-side='2')
                 div.topBar
                 div.holder
-                  label.foreign.text_center
-                    | #{col.l2_str}
-                  label.english.text_center
-                    | #{col.l1_str}
+                  -var d = col.direction == 'f2e'
+                  if d
+                    label.english.text_center
+                      | #{col.l1_str}
+                  else
+                    label.foreign.text_center
+                      | #{col.l2_str}
+                  //label.foreign.text_center
+                  //  | #{col.l2_str}
+                  //label.english.text_center
+                  //  | #{col.l1_str}
                 div.topBar
                   //label.submitLink.info(onclick='flipme(event)', data-for='card-' + col.lemcat + '-side=2') flip
                   //label.submitLink.info(onclick='practiceme(this)', data-for='card-' + col.lemcat + '-side=2') practice
               div.miniCardLayout(id='card-' + col.lemcat + '-side=3', data-side='3')
                 div.topBar
-                label.foreign.text_center
-                  | #{col.l2_str}
+                -var d = col.direction == 'f2e'
+                if d
+                  label.foreign.text_center
+                    | #{col.l2_str}
+                else 
+                  label.english.text_center
+                    | #{col.l1_str}
                 div.options(id='option_holder-' + col.lemcat)
                 div.topBar
               div.miniCardLayout(id='card-' + col.lemcat + '-side=4', data-side='4')
                 div.topBar
-                label.foreign.text_center
-                  | #{col.l2_str}
-                input(id = 'input-' + col.lemcat, type='text', data-label='label-type-result-' + col.lemcat, data-for='card-' + col.lemcat + '-side=1', onkeyup='keypress(event)')
-                label(id='label-type-result-' + col.lemcat)
-                div.options(id='option_holder-' + col.lemcat)
+                -var d = col.direction == 'f2e'
+                if d
+                  label.foreign.text_center
+                    | #{col.l2_str}
+                else 
+                  label.english.text_center
+                    | #{col.l1_str}
+                input(id = 'input-' + col.lemcat, type='text', data-label='input-result-' + col.lemcat, data-for='card-' + col.lemcat + '-side=1', onkeyup='keypress(event)')
+                label.text_center(id='input-result-' + col.lemcat)
                 div.topBar
         br
       p

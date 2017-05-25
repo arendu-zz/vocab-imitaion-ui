@@ -28,6 +28,7 @@ for (var row_key in global_data) {
       var pair_obj = po[po_idx];
       if (pair_obj.isTest) {
       }else{
+        pair_obj.direction = _.sample(['e2f', 'f2e']);
         var lst = global_groups[row_key];
         if (lst === undefined){
           lst = [pair_obj];
@@ -59,8 +60,7 @@ app.get('/quiz', function(req, res) {
   for (var sp_key in global_quizpairs) {
     var sp = global_quizpairs[sp_key];
     var qq = {};
-    //var direction = _.sample(['e2f', 'f2e']);
-    var direction = _.sample(['f2e']);
+    var direction = _.sample(['e2f', 'f2e']);
     if (direction == 'f2e') {
       qq.prompt_str = sp.l2_str;
       qq.direction = direction;
