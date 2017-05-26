@@ -151,6 +151,12 @@ app.get('/practice', function(req, res) {
 });
 */
 app.get('/', function(req, res) {
+  res.render('index', {
+    title: 'Flash Card Training',
+  });
+});
+
+app.get('/start', function(req, res) {
   var col_headers = _.map(global_data["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
