@@ -7,7 +7,7 @@ var _ = require('underscore');
 var IP = process.argv.slice(2)[0];
 if (!IP) {
   console.log("no IP arg");
-  IP='http://localhost:8001';
+  process.exit(1);
 
 }
 console.log("IP is", IP);
@@ -177,9 +177,9 @@ var server = app.listen(app.get('port'), function() {
   console.log("Listening on port %s...", server.address().port);
 });
 
-var http = require('http').Server(app);
+//var http = require('http').Server(app);
 //var io = require('socket.io').listen(server);
-http.listen(8001, "127.0.0.1");
+//http.listen(8001, "127.0.0.1");
 /*
 io.on('connection', function(socket) {
   var clientId = socket.id;
