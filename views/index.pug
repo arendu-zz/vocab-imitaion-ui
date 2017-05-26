@@ -1,0 +1,83 @@
+html
+  head
+    title= title
+    link(href='/css/style.css', rel='stylesheet')
+    link(rel='stylesheet', href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css', type='text/css', media='all')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js', type='text/javascript')
+    script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js', type='text/javascript')
+    script(src='/js/socket.io.js', type='text/javascript')
+    script(type='text/javascript').
+      var socket = io.connect('#{IP}');
+      $(document).ready(function ($) {
+        if (jQuery.ui) {
+            console.log('found jq ui')
+        } else {
+            alert("no jquery ui")
+        }
+      });
+      var enableSubmit = function(){
+        $('#submitButton').prop('disabled', false)
+      }
+  body
+    h2 Welcome to the Smart Flash Card user study!
+    div.holder
+      div.text
+          //p
+            //b INTRODUCTION:
+            //|  We are researchers at Johns Hopkins University doing a study on how to teach vocabulary via smart sequencing of flash cards. All data collected in this study is purely for research.
+          p
+            b INSTRUCTIONS:
+            ul
+              li 
+                | Your task is to prepare for a quiz that will test your understanding of spanish verb conjugation. In the training screen, you will be presented 3 groups of phrases. The phrases will be on flash-cards. You can flip the cards by clicking anywhere on them. Spanish phrases (in blue) will flip to reveal their English translation, and English phrases will flip to reveal their Spanish equivalent.
+              li 
+                b Note:
+                | Each flip will cost $0.05 from your rewards
+              li 
+                | Instead of fliping a card you may also "practice" what you know by selecting 
+                b MC
+                |or 
+                b TP 
+                | at the bottom of the card.
+              li
+                | Selecting MC will make a multiple choice question appear. Which will test your knowlege of the card's phrase pair.
+              li
+                b Note:
+                  | Each MC selection will cost $0.01 from your rewards
+              li
+                | Selecting TP will reveal a typing practice question, again testing your knowlege of the phrase on the card. Typing practice questions will not deduct anything from your rewards.
+              li
+               | Once you feel prepared, click the 
+               b Take Quiz
+               | link at the bottom of the page
+              li
+               | The quiz will consist of 12 typing questions, i.e a Spanish or English phrase will appear for which you should enter the translation.
+              li 
+               b Each correct quiz answer will add $0.10 to your reward 
+              li
+               b Each wrong quiz answer will deduct $0.05 from your reward
+                  
+            //b CONFIDENTIALITY:
+            //|  The response records will be kept confidential. Your Amazon user id will be saved during the duration of the study and deleted after compensation is given out. Any reports, presentations or papers resulting from this study will not contain information that could identify you.
+          //p 
+            //b COMPENSATION & BONUS:
+            |  We will pay participants $2 for completing the flash card sequence and quiz. The entire process will take between #{time_min} - #{time_max} minutes. The top performing participants will get an additional bonus of $10. Performance is measured based on the test score and accuracy through the training sequence.
+          p
+            b GOAL:
+            | Your goal is to prepare as quickly and cheaply as possible, but also to get as many quiz items correct.
+
+          //p
+            //b HELPFUL HINTS:
+            //| Make use of the time provided to look carefully at the cards feedback provided
+            //b  Don't rush through the sequence.
+            //br
+            //| The entire sequence will automatically move from one card to the next, do not leave the window open and unattended.
+            
+          form
+            b Mechanical Turk Worker ID:
+            input(type='text', name='username' onkeyup='enableSubmit()')
+            br
+            | (to ensure payment, enter your mechanical turk UserID correctly)
+            br
+            button#submitButton(formaction='/start', disabled='disabled') 
+              b Start
