@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 __author__ = 'arenduchintala'
 import sys
-import pdb
-import numpy as np
 import codecs
 import argparse
 import json
@@ -15,15 +13,18 @@ class Question(dict):
     def to_json_str(self,):
         return json.dumps(self)
 
+
 if __name__ == '__main__':
     opt= argparse.ArgumentParser(description="accepts a csv file and generates log linear features")
     #insert options here
-    opt.add_argument('-v', action='store', dest='vocab_file', default='es-en-medium.vocab')
+    opt.add_argument('-v', action='store', dest='vocab_file', required = True)
     options = opt.parse_args()
     data = codecs.open(options.vocab_file, 'r', 'utf8').readlines()
     max_line_idx = len(data) - 2
     data = [d.strip().split(',')[:] for d in data]
     categories = data[0]
+    print categories
+    main_cats = set([c.split()[0] for c in categories if str(c).startswith('Simple')])
     pair2questions = {}
 
     cat2pairs = {}
@@ -82,7 +83,9 @@ if __name__ == '__main__':
                 es_confusers = [en2es[c] for c in confusers]
                 lemma_confusers = [c[1] for c in cat2pairs[cat] if (pair2lem[c] == p_row and c != p and c not in test_pairs)]
                 es_lemma_confusers = [en2es[c] for c in lemma_confusers]
-            assert len(confusers) > 0
+            if len(confusers) == 0:
+                print cat, p
+                assert len(confusers) > 0
             q = {'cats': cats, 'l2_str': p[0], 'l1_str': p[1], 'l2_confusers': es_confusers, 'l1_confusers': confusers, 'confusers_cats': [cat]}
             pq.append(q)
             if len(lemma_confusers) > 0:
@@ -91,7 +94,7 @@ if __name__ == '__main__':
         pair2questions[p] = pq
 
     print cat2pairs.keys()
-    main_cats = ['Simple-Present', 'Simple-Past', 'Simple-Future']
+    print main_cats
     full_group = {}
     for mc_idx, mc in enumerate(main_cats):
         dump_obj = {}

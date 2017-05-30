@@ -11,36 +11,71 @@ if (!IP) {
 
 }
 console.log("IP is", IP);
-var global_data = JSON.parse(fs.readFileSync('./data/es-en-medium.vocab.questions.js', 'utf8'));
-var global_col_headers = _.map(global_data["0"], function(row) {
+var global_fulldata = JSON.parse(fs.readFileSync('./data/es-en-medium.vocab.questions.js', 'utf8'));
+var global_fullcol_headers = _.map(global_fulldata["0"], function(row) {
+  return row.cats.join(', ').replace('Simple-', '');
+});
+var global_demodata = JSON.parse(fs.readFileSync('./data/es-en-tiny.vocab.questions.js', 'utf8'));
+var global_democol_headers = _.map(global_demodata["0"], function(row) {
   return row.cats.join(', ').replace('Simple-', '');
 });
 
-var global_lemcat2pair = {};
-var global_pair2questions = {};
-var global_quizpairs = [];
-var global_groups = {};
+var global_fulllemcat2pair = {};
+var global_fullpair2questions = {};
+var global_fullquizpairs = [];
+var global_fullgroups = {};
 
-for (var row_key in global_data) {
-  for (var col_key in global_data[row_key]) {
-    po = global_data[row_key][col_key];
+var global_demolemcat2pair = {};
+var global_demopair2questions = {};
+var global_demoquizpairs = [];
+var global_demogroups = {};
+
+for (var row_key in global_fulldata) {
+  for (var col_key in global_fulldata[row_key]) {
+    po = global_fulldata[row_key][col_key];
     for (var po_idx  in po){
       var pair_obj = po[po_idx];
       if (pair_obj.isTest) {
       }else{
         pair_obj.direction = _.sample(['e2f', 'f2e']);
-        var lst = global_groups[row_key];
+        var lst = global_fullgroups[row_key];
         if (lst === undefined){
           lst = [pair_obj];
         }else{
           lst.push(pair_obj);
         }
-        global_groups[row_key] = lst;
+        global_fullgroups[row_key] = lst;
       }
-      global_lemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
-      global_pair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
+      global_fulllemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
+      global_fullpair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
       if (pair_obj.isTest){
-        global_quizpairs.push(pair_obj);
+        global_fullquizpairs.push(pair_obj);
+      }else{
+      }
+    }
+  }
+}
+
+for (var row_key in global_demodata) {
+  for (var col_key in global_demodata[row_key]) {
+    po = global_demodata[row_key][col_key];
+    for (var po_idx  in po){
+      var pair_obj = po[po_idx];
+      if (pair_obj.isTest) {
+      }else{
+        pair_obj.direction = _.sample(['e2f', 'f2e']);
+        var lst = global_demogroups[row_key];
+        if (lst === undefined){
+          lst = [pair_obj];
+        }else{
+          lst.push(pair_obj);
+        }
+        global_demogroups[row_key] = lst;
+      }
+      global_demolemcat2pair[pair_obj.lemcat] = pair_obj.l1_str + ',' + pair_obj.l2_str;
+      global_demopair2questions[pair_obj.l1_str + ',' + pair_obj.l2_str] = pair_obj.questions;
+      if (pair_obj.isTest){
+        global_demoquizpairs.push(pair_obj);
       }else{
       }
     }
@@ -54,11 +89,13 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
 app.get('/quiz', function(req, res) {
+  console.log(req.query, 'is the q');
+  var isDemo = JSON.parse(req.query.isDemo);
   var reward = parseFloat(req.query.reward);
-  global_quizpairs = _.shuffle(global_quizpairs);
+  global_fullquizpairs = _.shuffle(global_fullquizpairs);
   var quiz_list = [];
-  for (var sp_key in global_quizpairs) {
-    var sp = global_quizpairs[sp_key];
+  for (var sp_key in (isDemo ? global_demoquizpairs: global_fullquizpairs)) {
+    var sp = global_fullquizpairs[sp_key];
     var qq = {};
     var direction = _.sample(['e2f', 'f2e']);
     if (direction == 'f2e') {
@@ -80,7 +117,7 @@ app.get('/quiz', function(req, res) {
 
 app.get('/practice_selection', function(req, res) {
   var lemcat = req.query.lemcat;
-  var questions = global_pair2questions[global_lemcat2pair[lemcat]];
+  var questions = global_fullpair2questions[global_fulllemcat2pair[lemcat]];
   var categories = _.map(questions, function(q) {
     return q.confusers_cats.join(',');
   });
@@ -93,9 +130,9 @@ app.get('/practice_selection', function(req, res) {
 
 app.get('/reveal', function(req, res) {
   console.log(req.query.lemcat, 'here');
-  console.log(global_lemcat2pair);
-  var pair = global_lemcat2pair[req.query.lemcat];
-  var q = global_pair2questions[pair][0];
+  console.log(global_fulllemcat2pair);
+  var pair = global_fulllemcat2pair[req.query.lemcat];
+  var q = global_fullpair2questions[pair][0];
   var phrase_pair = {
     'l1_str': q.l1_str,
     'l2_str': q.l2_str
@@ -113,7 +150,7 @@ app.get('/practice', function(req, res) {
   var confusers_cats = _.sample(practice_choice.confusers_cats);
   var practice_type = _.sample(practice_choice.practice_type);
   var direction = _.sample(practice_choice.direction);
-  var questions = global_pair2questions[global_lemcat2pair[lemcat]];
+  var questions = global_fullpair2questions[global_fulllemcat2pair[lemcat]];
   var q = _.find(questions, function(q) {
     return q.confusers_cats.join(',') == confusers_cats;
   });
@@ -140,13 +177,13 @@ app.get('/practice', function(req, res) {
 });
 
 /*app.get('/', function(req, res) {
-  var col_headers = _.map(global_data["0"], function(row) {
+  var col_headers = _.map(global_fulldata["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
   res.render('group_selection', {
     title: 'Select Training Pair',
-    headers: global_col_headers,
-    message: global_data
+    headers: global_fullcol_headers,
+    message: global_fulldata
   });
 });
 */
@@ -157,25 +194,27 @@ app.get('/', function(req, res) {
 });
 
 app.get('/start', function(req, res) {
-  var col_headers = _.map(global_data["0"], function(row) {
+  var isDemo = JSON.parse(req.query.isDemo);
+  var col_headers = _.map(global_fulldata["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
   res.render('card_selection_rand', {
     title: 'Select Training Pair',
-    headers: global_col_headers,
-    groups: global_groups,
+    headers: isDemo ? global_democol_headers : global_fullcol_headers,
+    groups: isDemo ? global_demogroups : global_fullgroups,
+    isDemo: isDemo.toString(),
     reward: 1.0
   });
 });
 
 app.get('/back', function(req, res) {
-  var col_headers = _.map(global_data["0"], function(row) {
+  var col_headers = _.map(global_fulldata["0"], function(row) {
     return row.cats.join(', ').replace('Simple-', '');
   });
   res.render('group_selection', {
     title: 'Select Training Pair',
-    headers: global_col_headers,
-    message: global_data 
+    headers: global_fullcol_headers,
+    message: global_fulldata 
   });
 });
 
@@ -208,7 +247,7 @@ io.on('connection', function(socket) {
       check_pair  = q.prompt_str + ',' + user_answer;
     }
     var feedback;
-    if (_.has(global_pair2questions, check_pair)){
+    if (_.has(global_fullpair2questions, check_pair)){
       feedback = {'result': 'correct', 'symbol': '✔'};
     }else{
       feedback = {'result': 'wrong', 'symbol': '✘'};

@@ -15,8 +15,10 @@ html
             alert("no jquery ui")
         }
       });
-      var enableSubmit = function(){
-        $('#submitButton').prop('disabled', false)
+      var enableSubmit = function(e){
+        var inp = $(e.target).data('for');
+        var btn = document.getElementById(inp);
+        $(btn).prop('disabled', false)
       }
   body
     h2 Welcome to the Smart Flash Card user study!
@@ -28,70 +30,67 @@ html
           p
             b GOAL:
           p
-            | Your goal is to prepare for a quiz that will test your knowledge on verb conjugations. The preparation phase involves selecting and practicing verb inflections presented via a set of training flash-cards. 
-            | Your goal is to prepare as quickly as possible and also to get as many quiz items correct.
-
+            | Your goal is learn the verb conjugation paradigm for a foreign languaage. 
+            | In this task, you will first go through the a preparation phase.
+            | Once you are ready quiz will be presented to you.
+            | Yout goal is to prepare as quickly as possible and also to get as many quiz items correct.
           p
-            b INSTRUCTIONS:
+            b Preparation Phase: 
+            |  You will be presented a grid of flash-cards. On each card you will see a phrase, in either English or in the foreign language.
+            | These interactive flash-cards allow you to either:
+            ul
+              li Flip the card by clicking anywhere on a card
+              li practice with a multiple-choice question by clicking the letters "MC" at the bottom of the card
+              li practice with a typing question by clicking the letters "TP" at the bottom of the card
+
+            | You can select any flash-card and perform one of the actions listed above. 
+            | There is no restriction on what order you decide to study the phrases.
+            | However, each action has differnt costs:
+            ul
+              li Flip action costs 
+                b $0.05
+              li Multiple-Choice costs 
+                b $0.02
+              li Typing actions costs 
+                b $0.0
+          p
+            b Quiz Phase: 
+            |  When you are ready to take the quiz click the "Take Quiz" link at the bottom of the  grid of flash-cards
+            | You will then be presented new phrases with a input text box.
+            | You have to type in your best guess for the translation of each phrase.
+            b You may ignore accents in your typed answers.
             ul
               li 
-                | Your task is to prepare for a quiz that will test your understanding of spanish verb conjugation. 
-              li
-                | In the training screen, you will be presented 3 groups of phrases. The phrases will be on flash-cards. 
+                b Each correct answer will give you $0.15
               li 
-                | You can flip the cards by clicking anywhere on them. Spanish phrases (in blue) will flip to reveal their English translation, and English phrases will flip to reveal their Spanish equivalent.
-              li 
-                b Note: Each flip will cost $0.05 from your rewards.
-                |  The card will flip back automatically in 2 seconds.
-              li 
-                | Alternatively, you can also "practice" what you know by selecting 
-                b MC
-                |  or 
-                b TP 
-                | at the bottom of the card.
-              li
-                | Selecting MC will make a multiple choice question appear, which will test your knowlege of the card's phrase pair.
-                | selecting one of the options will reveal feedback. 
-              li
-                b Note:
-                  | Each MC selection will cost $0.01 from your rewards
-              li
-                | Selecting TP will reveal a typing practice question, again testing your knowlege of the phrase on the card. Typing practice questions will not deduct anything from your rewards.
-                | Press enter to submit a typed answer and receive feedback.
-              li
-                | After showing you the feedback the card will automatically flip back in 2 seconds.
-              li
-               | Once you feel prepared, click the 
-               b  Take Quiz
-               |  link at the bottom of the page
-              li
-               | The quiz will consist of 12 typing questions, i.e a Spanish or English phrase will appear for which you should enter the translation.
-              li 
-               | Each correct quiz answer will
-               b  add $0.10 
-               |  to your reward 
-              li
-               | Each wrong quiz answer will 
-               b  deduct $0.05
-               |  from your reward
-                  
+                b Each wrong answer will cost you $0.05
+
             //b CONFIDENTIALITY:
             //|  The response records will be kept confidential. Your Amazon user id will be saved during the duration of the study and deleted after compensation is given out. Any reports, presentations or papers resulting from this study will not contain information that could identify you.
           //p 
             //b COMPENSATION & BONUS:
             |  We will pay participants $2 for completing the flash card sequence and quiz. The entire process will take between #{time_min} - #{time_max} minutes. The top performing participants will get an additional bonus of $10. Performance is measured based on the test score and accuracy through the training sequence.
-          //p
-            //b HELPFUL HINTS:
-            //| Make use of the time provided to look carefully at the cards feedback provided
-            //b  Don't rush through the sequence.
-            //br
-            //| The entire sequence will automatically move from one card to the next, do not leave the window open and unattended.
+          p
+            form
+              b HELPFUL HINTS:
+              ul
+                li Clicking on every flash card might be wasteful.
+                li Select your flash-cards carefully, think about what you already know and how best to learn new aspects of the verb conjugation.
+                li
+                  b Demo:
+                  |   you can go through a demo version of the practice and quiz: 
+                  input(type='hidden', name='username' onkeyup='enableSubmit(event)', data-for='submitButtonDemo', value='demoUser')
+                  input(type='hidden', name='isDemo' value='true')
+                  button.submitlink#submitButtonDemo(formaction='/start') 
+                    b Here
             
-          form
-            b Mechanical Turk Worker ID:
-            input(type='text', name='username' onkeyup='enableSubmit()')
-            br
-            | (to ensure payment, enter your mechanical turk UserID correctly)
-            br
-            button#submitButton(formaction='/start', disabled='disabled') 
-              b Start
+          p
+            form
+              b Mechanical Turk Worker ID:
+              input(type='text', name='username' onkeyup='enableSubmit(event)', data-for='submitButtonFull')
+              input(type='hidden', name='isDemo' value='false')
+              br
+              | (to ensure payment, enter your mechanical turk UserID correctly)
+              br
+              button#submitButtonFull(formaction='/start', disabled='disabled') 
+                b Start Task
