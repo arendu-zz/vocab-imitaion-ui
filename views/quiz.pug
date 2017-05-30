@@ -16,6 +16,7 @@ html
         }
         var stateObj = { startPage: "start" };
         history.replaceState(stateObj, "Start", "/");
+        document.getElementById("endForm").style.visibility = "hidden";
       });
       function feedback(e){
       var rv = parseFloat('#{reward}');
@@ -29,8 +30,9 @@ html
             if (inp.val() == qq.full.l1_str){
               feedback_label.text(' ✔');
               feedback_label.addClass('correct');
-              rv += 0.10
+              rv += 0.15
               }else{
+              rv -= 0.05
               feedback_label.text(' ✘');
               feedback_label.addClass('wrong');
             }
@@ -39,8 +41,9 @@ html
             if (inp.val() == qq.full.l2_str){
               feedback_label.text(' ✔');
               feedback_label.addClass('correct');
-              rv += 0.10
+              rv += 0.15
               }else{
+              rv -= 0.05
               feedback_label.text(' ✘');
               feedback_label.addClass('wrong');
             }
@@ -48,10 +51,12 @@ html
           $(label).append(feedback_label);
         });
         $('#fixeddiv').text('Reward: $'  + rv.toFixed(2));
+        document.getElementById("submitBtn").style.visibility = "hidden";
+        document.getElementById("endForm").style.visibility = "visible";
       }
   body
     div.fixed#fixeddiv 
-      |Reward: #{reward}
+      |Reward: $1.0
     br
     br
     div.quizHolder
@@ -67,3 +72,8 @@ html
             input(id = 'input-' + qq.full.lemcat, type='text')
     p
       input.submitLink#submitBtn(type='button', onclick='feedback(event)' value='Submit' data-allqq=quiz_questions)
+    p
+      form#endForm
+        | Return to
+        button.submitLink#submitButtonFull(formaction='/', visible='disabled') 
+          b Start Page
